@@ -204,7 +204,7 @@ __Vectors_Size  EQU   __Vectors_End - __Vectors
                 SECTION .text:CODE:REORDER:NOROOT(2)
 Reset_Handler
                 MOV R0, SP
-                ADD R0, R0, #0x4000         ; Assume stack size 0x8000
+                SUB R0, R0, #0x4000         ; Assume stack size 0x8000
                 MRS R1, CONTROL
                 ORR R1, R1, #2              ; Use PSP
                 MSR CONTROL, R1
