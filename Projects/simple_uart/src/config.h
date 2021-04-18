@@ -1,0 +1,1 @@
+#define UART_TX_BUFFER_SIZE 64

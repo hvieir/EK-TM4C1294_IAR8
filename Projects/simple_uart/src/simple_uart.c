@@ -9,28 +9,28 @@
 #include "driverlib/pin_map.h"
 #include "utils/uartstdio.h"
 
-#include "system_TM4C1294.h" 
+#include "system_TM4C1294.h"
 
 uint8_t LED_D1 = 0;
 
 extern void UARTStdioIntHandler(void);
 
 void UARTInit(void){
-  // Enable the GPIO Peripheral used by the UART.
-  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOA));
-
   // Enable UART0
   SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
   while(!SysCtlPeripheralReady(SYSCTL_PERIPH_UART0));
+
+  // Initialize the UART for console I/O.
+  UARTStdioConfig(0, 9600, SystemCoreClock);
+
+  // Enable the GPIO Peripheral used by the UART.
+  SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+  while(!SysCtlPeripheralReady(SYSCTL_PERIPH_GPIOA));
 
   // Configure GPIO Pins for UART mode.
   GPIOPinConfigure(GPIO_PA0_U0RX);
   GPIOPinConfigure(GPIO_PA1_U0TX);
   GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-
-  // Initialize the UART for console I/O.
-  UARTStdioConfig(0, 9600, SystemCoreClock);
 } // UARTInit
 
 void UART0_Handler(void){
@@ -40,11 +40,12 @@ void UART0_Handler(void){
 void SysTick_Handler(void){
   LED_D1 ^= GPIO_PIN_1; // Troca estado do LED D1
   GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_1, LED_D1); // Acende ou apaga LED D1
+//  UARTprintf("Inconstitucionalissimamente\n");
 } // SysTick_Handler
 
 void main(void){
   UARTInit();
-  UARTprintf("Sistemas Embarcados - 2019/2\n");
+  UARTprintf("Sistemas Embarcados\n");
   
   SysTickPeriodSet(12000000); // f = 1Hz para clock = 24MHz
   
